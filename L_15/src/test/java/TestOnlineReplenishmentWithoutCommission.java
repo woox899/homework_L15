@@ -1,7 +1,4 @@
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -26,56 +23,54 @@ public class TestOnlineReplenishmentWithoutCommission {
 
     @DisplayName("Проверка названия указанного блока")
     @Test
+//    @Disabled
     public void checkTheNameOfTheSpecifiedBlock() {
         driver.get("https://mts.by");
-        WebElement title = driver.findElement(By.xpath("//h2[contains(text(), 'Онлайн пополнение')]"));
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        String fullText = (String) js.executeScript("return arguments[0].innerText;", title);
-
+        WebElement actualTitle = driver.findElement(By.xpath("//h2[normalize-space()='Онлайн пополнение без комиссии']"));
         String expectedText = "Онлайн пополнение\nбез комиссии";
-        assertEquals(expectedText, fullText.trim(), "Название блока не соответствует ожидаемому");
+        assertEquals(expectedText, actualTitle.getText(), "Название блока не соответствует ожидаемому");
     }
 
     @DisplayName("Проверка логотипов платежных систем")
     @Test
+//    @Disabled
     public void checkingPaymentSystemLogos() {
         driver.get("https://mts.by");
-        String[] paymentSystemLogos = {
-                "//img[contains(@src, 'visa')]",
-                "//img[contains(@src, 'visa-verified')]",
-                "//img[contains(@src, 'mastercard')]",
-                "//img[contains(@src, 'mastercard-secure')]",
-                "//img[contains(@src, 'belkart')]"
-        };
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        for (String xpath : paymentSystemLogos) {
-            List<WebElement> logos = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(xpath)));
-            assertTrue(!logos.isEmpty(), "Логотип не найден: " + xpath);
-            assertTrue(logos.get(0).isDisplayed(), "Логотип не отображается: " + xpath);
-        }
+        WebElement visaLogo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[contains(@src, 'visa')]")));
+        assertTrue(visaLogo.isDisplayed(), "Логотип Visa не отображается");
+
+        WebElement visaVerifiedLogo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[contains(@src, 'visa-verified')]")));
+        assertTrue(visaVerifiedLogo.isDisplayed(), "Логотип Visa Verifies не отображается");
+
+        WebElement mastercardLogo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[contains(@src, 'mastercard')]")));
+        assertTrue(mastercardLogo.isDisplayed(), "Логотип Mastercard не отображается");
+
+        WebElement mastercardSecureLogo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[contains(@src, 'mastercard-secure')]")));
+        assertTrue(mastercardSecureLogo.isDisplayed(), "Логотип Mastercard Secure не отображается");
+
+        WebElement belkartLogo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[contains(@src, 'belkart')]")));
+        assertTrue(belkartLogo.isDisplayed(), "Логотип Belkart не отображается");
     }
 
     @DisplayName("Проверка кнопки 'Подробнее о сервисе'")
     @Test
+//    @Disabled
     public void checkMoreAboutTheService() {
         driver.get("https://mts.by");
         String detailsButtonXpath = "//a[normalize-space()='Подробнее о сервисе']";
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-        try {
-            WebElement detailsButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(detailsButtonXpath)));
-            assertTrue(detailsButton.isDisplayed(), "Кнопка 'Подробнее о сервисе' не отображается");
-            assertTrue(detailsButton.isEnabled(), "Кнопка 'Подробнее о сервисе' не активна");
-        } catch (TimeoutException e) {
-            fail("Кнопка 'Подробнее о сервисе' не найдена или не кликабельна: " + e.getMessage());
-        }
+        WebElement detailsButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(detailsButtonXpath)));
+        detailsButton.click();
+        String expectedUrl = "https://www.mts.by/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/";
+        String actualUrl = driver.getCurrentUrl();
+        assertTrue(actualUrl.startsWith(expectedUrl), "Переход на страницу с подробной информацией не выполнен");
     }
 
     @DisplayName("Проверка кнопки 'Продолжить'")
     @Test
+//    @Disabled
     public void checkContinueButton() {
         driver.get("https://mts.by");
         String phoneInputXpath = "//input[@id='connection-phone']";
@@ -83,7 +78,7 @@ public class TestOnlineReplenishmentWithoutCommission {
         String emailXpath = "//input[@id='connection-email']";
         String continueButtonXpath = "//button[normalize-space()='Продолжить']";
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
         WebElement phoneInput = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(phoneInputXpath)));
         phoneInput.sendKeys("297777777");
@@ -95,8 +90,11 @@ public class TestOnlineReplenishmentWithoutCommission {
         email.sendKeys("woox899@gmail.com");
 
         WebElement continueButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(continueButtonXpath)));
-        assertTrue(continueButton.isDisplayed(), "Кнопка 'Продолжить' не отображается");
-        assertTrue(continueButton.isEnabled(), "Кнопка 'Продолжить' не активна");
+
+        continueButton.click();
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.xpath("//iframe[@class='bepaid-iframe']")));
+        WebElement payWindow = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='150.00 BYN']")));
+        assertTrue(payWindow.isDisplayed(), "Модальное окно не отображается");
     }
 
     @BeforeAll
