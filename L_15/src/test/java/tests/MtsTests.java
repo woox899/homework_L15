@@ -1,13 +1,16 @@
 package tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.qameta.allure.Description;
+import io.qameta.allure.Link;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import pages.HomePage;
 import pages.OnlineReplenishmentWithoutCommissionPage;
 import pages.PaymentWindowPage;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MtsTests {
@@ -33,6 +36,9 @@ public class MtsTests {
     }
 
     @DisplayName("Проверка названия блока 'Онлайн пополнение без комиссии'")
+    @Description("Этот тест проверяет название блока 'Онлайн пополнение без комиссии'")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.MINOR)
     @Test
 //    @Disabled
     public void testOnlineReplenishmentBlockTitle() {
@@ -42,6 +48,9 @@ public class MtsTests {
     }
 
     @DisplayName("Проверка наличия логотипов платежных систем")
+    @Description("Этот тест проверяет наличие логотипов платежных систем")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.MINOR)
     @Test
 //    @Disabled
     public void testPaymentLogosPresence() {
@@ -54,6 +63,9 @@ public class MtsTests {
 
     //Проверка кнопки "Подробнее о сервисе"
     @DisplayName("Проверка кнопки 'Подробнее о сервисе'")
+    @Description("Этот тест проверяет работу кнопки 'Подробнее о сервисе'")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.MINOR)
     @Test
 //    @Disabled
     public void testDetailsButton() {
@@ -61,6 +73,9 @@ public class MtsTests {
     }
 
     @DisplayName("Проверка кнопки 'Продолжить' после заполнения полей")
+    @Description("Этот тест проверяет работу кнопки 'Продолжить' после заполнения полей формы")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.NORMAL)
     @Test
 //    @Disabled
     public void testContinueButton() {
@@ -76,6 +91,9 @@ public class MtsTests {
 
     //Проверка плейсхолдеров Услуги связи
     @DisplayName("Проверка плейсхолдеров на вкладке 'Услуги связи'")
+    @Description("Этот тест проверяет наличие плейсхолдеров на вкладке 'Услуги связи'")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.TRIVIAL)
     @Test
 //    @Disabled
     public void checkCommunicationServicesPlaceholders() {
@@ -94,6 +112,9 @@ public class MtsTests {
     }
     //Проверка плейсхолдеров Домашний интернет
     @DisplayName("Проверка плейсхолдеров на вкладке 'Домашний интернет'")
+    @Description("Этот тест проверяет наличие плейсхолдеров на вкладке 'Домашний интернет'")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.TRIVIAL)
     @Test
 //    @Disabled
     public void checkHomeInternetPlaceholders() {
@@ -113,6 +134,9 @@ public class MtsTests {
 
     //Проверка плейсхолдеров Рассрочка
     @DisplayName("Проверка плейсхолдеров на вкладке 'Рассрочка'")
+    @Description("Этот тест проверяет наличие плейсхолдеров на вкладке 'Рассрочка'")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.TRIVIAL)
     @Test
 //    @Disabled
     public void checkInstallmentPlanPlaceholders() {
@@ -132,6 +156,9 @@ public class MtsTests {
 
     //Проверка плейсхолдеров Задолженность
     @DisplayName("Проверка плейсхолдеров на вкладке 'Задолженность'")
+    @Description("Этот тест проверяет наличие плейсхолдеров на вкладке 'Задолженность'")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.TRIVIAL)
     @Test
 //    @Disabled
     public void checkScoreArrearsPlaceholders() {
@@ -151,6 +178,10 @@ public class MtsTests {
     }
 
     @DisplayName("Заполнение полей, переход в окошко платежа, проверка данных в окошке платежа")
+    @Description("Этот тест проверяет часть флоу оплаты в разделе 'Услуги связи', а именно заполнение полей формы, " +
+            "преход в окошко платежа и проверку данных в окошке платежа")
+    @Link("https://someLink.com")
+    @Severity(SeverityLevel.NORMAL)
     @Test
     public void goToPaymentWindow() {
         paymentWindowPage.selectCommunicationServices();
